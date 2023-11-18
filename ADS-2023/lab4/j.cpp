@@ -33,6 +33,14 @@ int heightOfNode(TreeNode* root){
     int r = heightOfNode(root->right);
     return max(r,l)+1;
 }
+void pushIn(TreeNode* root, vector<TreeNode*> &v){
+    if(root==NULL){
+        return;
+    }
+    pushIn(root->left, v);
+    v.push_back(root);
+    pushIn(root->right, v);
+}
 
 bool whetherBalanced(TreeNode* root){
     if(root==NULL){
@@ -53,26 +61,33 @@ void printNode(TreeNode* root){
     printNode(root->right);
 }
 
+TreeNode* buildTree(vector<TreeNode*>&v, int l, int r){
+    if (l > r){
+        return NULL;
+    }
+    int mid = (r + l)/2;
+    TreeNode* root = v[mid];
+    root -> left = buildTree(v, l, mid - 1);
+    root -> right = buildTree(v, mid + 1, r);
+    return root;
+}
+TreeNode* tree(TreeNode* root){
+    vector<TreeNode*>v;
+    pushIn(root, v);
+    int n = v.size();
+    return buildTree(v, 0, n-1);
+}
 int main(){
     TreeNode* root = NULL;
     int n;cin>>n;
-    int size = pow(2, n)-1;
-    vector<int>v;
-    for(int i = 0;i<size;i++){
+    int sz = 1;
+    for(int i = 0;i<n;i++){
+        sz*=2;
+    }
+    for(int i = 0;i<sz-1;i++){
         int num;cin>>num;
-        v.push_back(num);
+        root = insertNode(root, num);
     }
-    for(int i = 0;i<v.size();i++){
-        root = insertNode(root, v[i]);
-        for(int j = 0;j<v.size();j++){
-            if(i!=j){
-                root = insertNode(root, v[j]);
-            }
-        }
-        if(whetherBalanced(root)){
-            printNode(root);
-            return 0;
-        }
-        root = NULL;
-    }
+    root = tree(root);
+    printNode(root);
 }

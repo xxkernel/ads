@@ -1,50 +1,52 @@
 #include<iostream>
 using namespace std;
 
-class Node{
-public:
-    int data;
-    Node* next;
+struct ListNode{
+    int val;
+    ListNode* next;
+    ListNode(int x = 0){
+        this->val = x;
+        this->next = NULL;
+    }
 };
-
-void printLinkedList(Node* head){
-    while (head)
-    {
-        cout<<head->data<<" ";
+void insertNode(ListNode* &head, ListNode* &tail, int x){
+    if(!head && !tail){
+        ListNode* newOne = new ListNode(x);
+        head = tail = newOne;
+    }
+    else{
+        ListNode* newOne = new ListNode(x);
+        tail->next = newOne;
+        tail = tail->next;
+    }
+}
+void printNode(ListNode* head){
+    while(head){
+        cout<<head->val<<" ";
         head = head->next;
     }
     cout<<endl;
 }
-
-void reverseLinkedList(Node* &head){
-    Node* temp = NULL;
-    Node* end = NULL;
-    Node* current = head;
-    while (current)
-    {
-        end = current->next;
-        current->next = temp;
-        temp = current;
-        current = end;
+ListNode* reverseNode(ListNode* head){
+    ListNode* start = head;
+    ListNode* temp = NULL;
+    ListNode* end = NULL;
+    while(start){
+        temp = start->next;
+        start->next = end;
+        end = start;
+        start = temp;
     }
-    head = temp;
+    return end;
 }
-
-
 int main(){
-    Node* head = new Node();
-    Node* two = new Node();
-    Node* three = new Node();
-    Node* four = new Node();
-    head->data = 1;
-    two->data = 2;
-    three->data = 3;
-    four->data = 4;
-    head->next = two;
-    two->next = three;
-    three->next = four;
-    four->next = NULL;
-    printLinkedList(head);
-    reverseLinkedList(head);
-    printLinkedList(head);
+    ListNode* head = NULL, *tail = NULL;
+    int n;cin>>n;
+    while(n--){
+        int num;cin>>num;
+        insertNode(head, tail, num);
+    }
+    printNode(head);
+    ListNode* reversed = reverseNode(head);
+    printNode(reversed);
 }
