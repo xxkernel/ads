@@ -1,36 +1,37 @@
-#include <bits/stdc++.h>
-using ll = long long;
-#define go ios_base::sync_with_stdio(0);cin.tie(NULL);cout.tie(NULL);
-using namespace std;
+#include <stdio.h>
 
-void solve(){
-    int n,m;cin>>n>>m;
-    vector<vector<int>> v(n, vector<int>(n, 0));
-    for(int i = 0;i<m;i++){
-        int x, y;
-        cin>>x>>y;
-        x--;
-        y--;
-        v[x][y] = 1;
+#define MAX 101
+
+int g[MAX][MAX];
+
+int main() {
+    int n, m, a, b, i, j, flag;
+
+    // Читаем входные данные. Для каждого ребра (a, b) увеличим значение g[a][b] на 1.
+    scanf("%d %d", &n, &m);
+    for (i = 0; i < m; i++) {
+        scanf("%d %d", &a, &b);
+        g[a][b]++;
     }
-    bool isTrue = 0;
-    for (int i = 0; i < n; ++i) {
-        if (v[i][i] != 0) {
-            cout<<"NO";
-            return;
-        }
-    }
-    for(int i = 0;i<n;i++){
-        for(int j = 0;j<n;j++){
-            if(v[i][j]==1 && !v[j][i]){
-                isTrue = 1;
+
+    // Проверяем, является ли граф турниром.
+    flag = 1; // Предполагаем, что граф турнир.
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            if ((i != j) && (g[i][j] + g[j][i] != 1)) {
+                flag = 0; // Найдено несоответствие условию турнира.
+                break;
             }
         }
+        if (flag == 0) // Если уже обнаружено, что это не турнир, выходим из внешнего цикла.
+            break;
     }
-    isTrue==0 ? cout<<"NO":cout<<"YES";
-}
 
-int main(){
-    go
-    solve();
+    // Выводим результат в зависимости от значения переменной flag.
+    if (flag == 1)
+        printf("YES\n"); // Граф является турниром.
+    else
+        printf("NO\n"); // Граф не является турниром.
+
+    return 0;
 }
